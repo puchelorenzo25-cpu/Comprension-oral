@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ast">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Gaita Asturiana — Comprensión oral</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f4ede1;
+    color: #2a1f14;
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fffaf2;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(60, 35, 10, 0.18);
+    overflow: hidden;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    background: linear-gradient(135deg, #1f3a5f 0%, #3a5f8a 50%, #c9a227 100%);
+    color: #fdf6e3;
+    padding: 24px 36px;
+    position: relative;
+  }
+  .header::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #d4a850, #c9a227, #d4a850);
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.95;
+    font-style: italic;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #e6dcc5;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #d4a850, #c9a227);
+    transition: width 0.4s ease;
+    width: 12.5%;
+  }
+  .slide {
+    flex: 1;
+    padding: 40px 50px;
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .slide.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Portada */
+  .cover { text-align: center; padding: 60px 40px; }
+  .cover .icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    display: inline-block;
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15));
+  }
+  .cover h2 {
+    font-size: 38px;
+    color: #1f3a5f;
+    margin-bottom: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+  .cover .lead {
+    font-size: 17px;
+    color: #5a4632;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  .cover .instructions {
+    margin-top: 36px;
+    padding: 20px;
+    background: #f7efdf;
+    border-left: 4px solid #c9a227;
+    border-radius: 6px;
+    text-align: left;
+    font-size: 15px;
+    color: #4a3520;
+  }
+  .cover .instructions strong { color: #1f3a5f; }
+
+  /* Audio slide */
+  .audio-slide { text-align: center; }
+  .audio-slide h2 {
+    color: #1f3a5f;
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+  .audio-slide .audio-instruction {
+    color: #5a4632;
+    font-size: 16px;
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+  .audio-wrapper {
+    background: linear-gradient(135deg, #f7efdf, #e6dcc5);
+    border-radius: 14px;
+    padding: 30px;
+    margin: 0 auto 24px;
+    max-width: 550px;
+    box-shadow: inset 0 2px 6px rgba(60, 35, 10, 0.1);
+  }
+  .audio-wrapper audio {
+    width: 100%;
+    outline: none;
+  }
+  .audio-icon {
+    font-size: 56px;
+    margin-bottom: 16px;
+  }
+  .file-upload {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #8b7355;
+  }
+  .file-upload label {
+    color: #1f3a5f;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 600;
+  }
+  .file-upload input { display: none; }
+  .listen-tip {
+    margin-top: 24px;
+    padding: 16px;
+    background: #f7efdf;
+    border-radius: 8px;
+    color: #5a4632;
+    font-size: 14px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .listen-tip strong { color: #1f3a5f; }
+
+  /* Preguntas */
+  .question-slide .q-number {
+    display: inline-block;
+    background: linear-gradient(135deg, #3a5f8a, #1f3a5f);
+    color: #fdf6e3;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 3px 8px rgba(31, 58, 95, 0.3);
+  }
+  .question-slide h2 {
+    color: #1f3a5f;
+    font-size: 22px;
+    margin-bottom: 24px;
+    line-height: 1.4;
+  }
+  .question-slide textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 16px;
+    border: 2px solid #e6dcc5;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    color: #2a1f14;
+    background: #fffefb;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    line-height: 1.6;
+  }
+  .question-slide textarea:focus {
+    outline: none;
+    border-color: #3a5f8a;
+    box-shadow: 0 0 0 3px rgba(58, 95, 138, 0.15);
+  }
+  .question-slide .tip {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #8b7355;
+    font-style: italic;
+  }
+  .reread-link {
+    display: inline-block;
+    margin-top: 16px;
+    color: #1f3a5f;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px dashed #1f3a5f;
+    cursor: pointer;
+  }
+  .reread-link:hover { color: #122340; }
+
+  /* Final */
+  .final-slide { text-align: center; padding: 50px 40px; }
+  .final-slide .check { font-size: 70px; margin-bottom: 20px; }
+  .final-slide h2 { color: #1f3a5f; font-size: 30px; margin-bottom: 16px; }
+  .final-slide p { font-size: 16px; color: #5a4632; margin-bottom: 28px; }
+  .download-btn {
+    background: linear-gradient(135deg, #3a5f8a, #1f3a5f);
+    color: #fdf6e3;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(31, 58, 95, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin: 8px;
+  }
+  .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(31, 58, 95, 0.4);
+  }
+  .download-btn.secondary {
+    background: linear-gradient(135deg, #d4a850, #b8901f);
+  }
+
+  /* Nav */
+  .nav {
+    padding: 20px 40px;
+    border-top: 1px solid #e6dcc5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #faf3e6;
+  }
+  .nav button {
+    background: #fffaf2;
+    color: #1f3a5f;
+    border: 2px solid #3a5f8a;
+    padding: 10px 24px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav button:hover:not(:disabled) {
+    background: #3a5f8a;
+    color: #fdf6e3;
+  }
+  .nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .nav button.primary {
+    background: linear-gradient(135deg, #3a5f8a, #1f3a5f);
+    color: #fdf6e3;
+    border: none;
+  }
+  .nav button.primary:hover { transform: translateY(-1px); }
+  .nav .counter {
+    font-size: 14px;
+    color: #8b7355;
+    font-weight: 600;
+  }
+
+  @media (max-width: 600px) {
+    .slide { padding: 24px; }
+    .cover h2 { font-size: 28px; }
+    .nav { padding: 16px 20px; }
+    .nav button { padding: 8px 16px; font-size: 13px; }
+  }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .container { box-shadow: none; }
+    .nav, .reread-link, .header::after, .progress-bar, .file-upload, audio { display: none; }
+    .slide { display: block !important; padding: 30px; page-break-after: always; }
+    textarea { border: 1px solid #999; background: white; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>La Gaita Asturiana · Comprensión oral</h1>
+    <div class="subtitle">Llingua asturiana</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- Slide 1: Portada -->
+  <div class="slide active cover" data-slide="1">
+    <div class="icon">🎶</div>
+    <h2>La Gaita Asturiana</h2>
+    <p class="lead">Una actividá de comprensión oral sobre l'instrumentu más representativu d'Asturies</p>
+    <div class="instructions">
+      <p><strong>¿Cómo facer esta actividá?</strong></p>
+      <p style="margin-top:8px;">1. Escucha l'audiu con atención, polo menos dos vegaes.<br>
+      2. Responde a les 5 preguntes coles tos pallabres.<br>
+      3. Pues volver al audiu cuantes veces necesites.<br>
+      4. Al final, descarga les tos respuestes pa entregales.</p>
+    </div>
+  </div>
+
+  <!-- Slide 2: Audio -->
+  <div class="slide audio-slide" data-slide="2">
+    <div class="audio-icon">🎧</div>
+    <h2>Escucha l'audiu</h2>
+    <p class="audio-instruction">Pulsa play y escucha con atención. Pues escuchalu les veces que faiga falta.</p>
+    <div class="audio-wrapper">
+      <audio id="audioPlayer" controls preload="metadata">
+        <source src="audio.mp3" type="audio/mpeg">
+        <source src="audio.m4a" type="audio/mp4">
+        El to navegador nun soporta l'elementu d'audio.
+      </audio>
+      <div class="file-upload">
+        ¿Nun se carga l'audiu? <label for="audioFile">Esbilla un ficheru del to ordenador</label>
+        <input type="file" id="audioFile" accept="audio/*">
+      </div>
+    </div>
+    <div class="listen-tip">
+      <strong>💡 Conseyu:</strong> escucha l'audiu una primer vegada sin parar pa pillar la idea xeneral, y dempués escúchalu otra vegada pausando si lo necesites. Pues volver a esta páxina dende cualquier pregunta.
+    </div>
+  </div>
+
+  <!-- Preguntas -->
+  <div class="slide question-slide" data-slide="3">
+    <div class="q-number">1</div>
+    <h2>¿Qué ye la gaita asturiana y a qué familia d'instrumentos musicales pertenez?</h2>
+    <textarea data-question="1" placeholder="Escribi equí la to respuesta…"></textarea>
+    <p class="tip">💡 Conseyu: l'audiu menta el tipu d'instrumentu y la so familia.</p>
+    <a class="reread-link" onclick="goToSlide(2)">↩ Volver al audiu</a>
+  </div>
+
+  <div class="slide question-slide" data-slide="4">
+    <div class="q-number">2</div>
+    <h2>¿De qué partes ta compuesta la gaita? Esplica brevemente la función de caúna.</h2>
+    <textarea data-question="2" placeholder="Escribi equí la to respuesta…"></textarea>
+    <p class="tip">💡 Conseyu: l'audiu menta cuatro partes principales.</p>
+    <a class="reread-link" onclick="goToSlide(2)">↩ Volver al audiu</a>
+  </div>
+
+  <div class="slide question-slide" data-slide="5">
+    <div class="q-number">3</div>
+    <h2>¿Qué ye una banda de gaites y ónde participa?</h2>
+    <textarea data-question="3" placeholder="Escribi equí la to respuesta…"></textarea>
+    <p class="tip">💡 Conseyu: piensa nun conxuntu d'instrumentos que toquen toos a una.</p>
+    <a class="reread-link" onclick="goToSlide(2)">↩ Volver al audiu</a>
+  </div>
+
+  <div class="slide question-slide" data-slide="6">
+    <div class="q-number">4</div>
+    <h2>Menta tres xéneros musicales propios de la gaita asturiana. ¿Cómo se baila la <em>danza prima</em>?</h2>
+    <textarea data-question="4" placeholder="Escribi equí la to respuesta…"></textarea>
+    <p class="tip">💡 Conseyu: l'audiu cita varios xéneros y describe la forma de baillar de la danza prima.</p>
+    <a class="reread-link" onclick="goToSlide(2)">↩ Volver al audiu</a>
+  </div>
+
+  <div class="slide question-slide" data-slide="7">
+    <div class="q-number">5</div>
+    <h2>¿Por qué pue dicise que la gaita ye un instrumentu vivu y nun namás un recuerdu del pasáu? Menta a un gaiteru famosu del que se fala nel audiu.</h2>
+    <textarea data-question="5" placeholder="Escribi equí la to respuesta…"></textarea>
+    <p class="tip">💡 Conseyu: pista — l'audiu fala d'escueles, neños mozos y un gaiteru internacional.</p>
+    <a class="reread-link" onclick="goToSlide(2)">↩ Volver al audiu</a>
+  </div>
+
+  <!-- Final -->
+  <div class="slide final-slide" data-slide="8">
+    <div class="check">🎉</div>
+    <h2>¡Acabesti!</h2>
+    <p>Bon trabayu. Pues descargar les tos respuestes pa imprimir o entregar al profesor.</p>
+    <button class="download-btn" onclick="downloadAnswers()">📥 Descargar respuestes (.txt)</button>
+    <button class="download-btn secondary" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+
+  <div class="nav">
+    <button id="prevBtn" onclick="prevSlide()" disabled>← Anterior</button>
+    <div class="counter"><span id="current">1</span> / 8</div>
+    <button id="nextBtn" class="primary" onclick="nextSlide()">Siguiente →</button>
+  </div>
+</div>
+
+<script>
+  let currentSlide = 1;
+  const totalSlides = 8;
+
+  function showSlide(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    const slide = document.querySelector(`.slide[data-slide="${n}"]`);
+    if (slide) slide.classList.add('active');
+    currentSlide = n;
+    document.getElementById('current').textContent = n;
+    document.getElementById('progressFill').style.width = (n / totalSlides * 100) + '%';
+    document.getElementById('prevBtn').disabled = n === 1;
+    document.getElementById('nextBtn').disabled = n === totalSlides;
+    document.getElementById('nextBtn').textContent = n === totalSlides - 1 ? 'Finalizar →' : 'Siguiente →';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function nextSlide() { if (currentSlide < totalSlides) showSlide(currentSlide + 1); }
+  function prevSlide() { if (currentSlide > 1) showSlide(currentSlide - 1); }
+  function goToSlide(n) { showSlide(n); }
+
+  document.getElementById('audioFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      const audio = document.getElementById('audioPlayer');
+      audio.src = url;
+      audio.load();
+    }
+  });
+
+  function downloadAnswers() {
+    const questions = [
+      "¿Qué ye la gaita asturiana y a qué familia d'instrumentos musicales pertenez?",
+      "¿De qué partes ta compuesta la gaita? Esplica brevemente la función de caúna.",
+      "¿Qué ye una banda de gaites y ónde participa?",
+      "Menta tres xéneros musicales propios de la gaita asturiana. ¿Cómo se baila la danza prima?",
+      "¿Por qué pue dicise que la gaita ye un instrumentu vivu y nun namás un recuerdu del pasáu? Menta a un gaiteru famosu."
+    ];
+    let text = "LA GAITA ASTURIANA — COMPRENSIÓN ORAL\nLlingua asturiana\n" + "=".repeat(50) + "\n\n";
+    for (let i = 1; i <= 5; i++) {
+      const ta = document.querySelector(`textarea[data-question="${i}"]`);
+      text += `PREGUNTA ${i}:\n${questions[i-1]}\n\nRESPUESTA:\n${ta ? ta.value : ''}\n\n` + "-".repeat(50) + "\n\n";
+    }
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'respuestes_gaita.txt';
+    a.click();
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+  });
+
+  showSlide(1);
+</script>
+</body>
+</html>
